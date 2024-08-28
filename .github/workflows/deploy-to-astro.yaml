@@ -14,13 +14,10 @@ on:
       - develop
 
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      ASTRO_API_TOKEN: ${{ secrets.ASTRO_API_TOKEN }}
-      DEPLOYMENT_ID: ${{ github.event.inputs.deploymentId || env.DEPLOYMENT_ID }}
-
     steps:
       - name: Set Deployment ID based on branch
         run: |
@@ -30,8 +27,12 @@ jobs:
             echo "DEPLOYMENT_ID=${{ secrets.DEVELOP_DEPLOYMENT_ID }}" >> $GITHUB_ENV
           fi
 
+      - name: Override with Workflow Dispatch Input if Provided
+        if: ${{ github.event.inputs.deploymentId != '' }}
+        run: echo "DEPLOYMENT_ID=${{ github.event.inputs.deploymentId }}" >> $GITHUB_ENV
+
       - name: Deploy to Astro
         uses: astronomer/deploy-action@v0.6
         with:
           deployment_id: ${{ env.DEPLOYMENT_ID }}
-          api_token: ${{ env.ASTRO_API_TOKEN }}
+          api_token: ${{ secrets.ASTRO_API_TOKEN }}
