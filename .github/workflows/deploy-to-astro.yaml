@@ -13,11 +13,11 @@ on:
         type: string
   push:
     branches:
-      - main
+      - develop
 
 env:
-  ASTRO_API_TOKEN: ${{ inputs.apiToken }}
-  DEPLOYMENT_ID: ${{ inputs.deploymentId }}
+  ASTRO_API_TOKEN: ${{ inputs.apiToken || secrets.ASTRO_API_TOKEN }}
+  DEPLOYMENT_ID: ${{ inputs.deploymentId || vars.DEPLOYMENT_ID }}
 
 jobs:
   build:
@@ -25,8 +25,3 @@ jobs:
     steps:
     - name: Deploy to Astro
       uses: astronomer/deploy-action@v0.6
-      env:
-        ASTRO_API_TOKEN: ${{ env.ASTRO_API_TOKEN }}
-        DEPLOYMENT_ID: ${{ env.DEPLOYMENT_ID }}
-      with:
-        args: --verbose
