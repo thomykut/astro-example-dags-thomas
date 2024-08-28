@@ -50,7 +50,8 @@ def example_astronauts():
         r = requests.get("http://api.open-notify.org/astros.json")
         number_of_people_in_space = r.json()["number"]
         list_of_people_in_space = r.json()["people"]
-
+        # TODO: Remove print
+        print("Just printing something random to update the DAG.")
         context["ti"].xcom_push(
             key="number_of_people_in_space", value=number_of_people_in_space
         )
