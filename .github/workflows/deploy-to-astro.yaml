@@ -24,5 +24,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set Astro Workspace
+      run: astro workspace switch cm0dxqxz006rg01lwbohycxrb
+
     - name: Deploy to Astro
       uses: astronomer/deploy-action@v0.6
