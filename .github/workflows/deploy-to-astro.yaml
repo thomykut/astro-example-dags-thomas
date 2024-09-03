@@ -29,6 +29,10 @@ jobs:
         if: ${{ github.event.inputs.deploymentId != '' }}
         run: echo "DEPLOYMENT_ID=${{ github.event.inputs.deploymentId }}" >> $GITHUB_ENV
 
+      - name: Install Astro CLI
+        run: |
+          curl -sSL https://install.astronomer.io | sudo bash
+
       - name: Authenticate to Astro
         run: |
           echo "${{ secrets.ASTRO_API_TOKEN }}" | astro auth login --token -
