@@ -35,7 +35,8 @@ jobs:
 
       - name: Authenticate to Astro
         run: |
-          echo "${{ secrets.ASTRO_API_TOKEN }}" | astro auth login --token -
+          export ASTRO_API_TOKEN="${{ secrets.ASTRO_API_TOKEN }}"
+          astro login
 
       - name: Deploy to Astro
         uses: astronomer/deploy-action@v0.6
