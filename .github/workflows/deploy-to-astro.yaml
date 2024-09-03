@@ -5,37 +5,28 @@ on:
     inputs:
       deploymentId:
         description: "Deployment ID"
-        required: false
+        required: true
+        type: string
+      apiToken:
+        description: "Astro API Token"
+        required: true
         type: string
 
   push:
     branches:
       - main
-      - develop
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    env:
+      ASTRO_API_TOKEN: ${{ github.event.inputs.apiToken || secrets.ASTRO_API_TOKEN }}
+      DEPLOYMENT_ID: ${{ github.event.inputs.deploymentId || secrets.DEPLOYMENT_ID }}
     steps:
-      - name: Set Deployment ID based on branch
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "DEPLOYMENT_ID=${{ secrets.MAIN_DEPLOYMENT_ID }}" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
-            echo "DEPLOYMENT_ID=${{ secrets.DEVELOP_DEPLOYMENT_ID }}" >> $GITHUB_ENV
-          fi
-
-      - name: Install Astro CLI
-        run: |
-          curl -sSL https://install.astronomer.io | sudo bash
-
-      - name: Set API Token for Astro
-        env:
-          ASTRO_API_TOKEN: ${{ secrets.ASTRO_API_TOKEN }}
-        run: |
-          echo "API token set"
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: Deploy to Astro
-        uses: astronomer/deploy-action@v0.6
+        uses: astronomer/deploy-action@v0.4
         with:
           deployment-id: ${{ env.DEPLOYMENT_ID }}
