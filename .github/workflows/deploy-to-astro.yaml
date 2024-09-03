@@ -25,18 +25,15 @@ jobs:
             echo "DEPLOYMENT_ID=${{ secrets.DEVELOP_DEPLOYMENT_ID }}" >> $GITHUB_ENV
           fi
 
-      - name: Override with Workflow Dispatch Input if Provided
-        if: ${{ github.event.inputs.deploymentId != '' }}
-        run: echo "DEPLOYMENT_ID=${{ github.event.inputs.deploymentId }}" >> $GITHUB_ENV
-
       - name: Install Astro CLI
         run: |
           curl -sSL https://install.astronomer.io | sudo bash
 
-      - name: Authenticate to Astro
+      - name: Set API Token for Astro
+        env:
+          ASTRO_API_TOKEN: ${{ secrets.ASTRO_API_TOKEN }}
         run: |
-          export ASTRO_API_TOKEN="${{ secrets.ASTRO_API_TOKEN }}"
-          astro login
+          echo "API token set"
 
       - name: Deploy to Astro
         uses: astronomer/deploy-action@v0.6
