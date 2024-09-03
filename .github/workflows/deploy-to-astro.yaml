@@ -20,8 +20,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      ASTRO_API_TOKEN: ${{ github.event.inputs.apiToken || secrets.ASTRO_API_TOKEN }}
-      DEPLOYMENT_ID: ${{ github.event.inputs.deploymentId || secrets.DEPLOYMENT_ID }}
+      ASTRO_API_TOKEN: ${{ secrets.ASTRO_API_TOKEN }}
+      DEPLOYMENT_ID: ${{ secrets.DEPLOYMENT_ID }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
